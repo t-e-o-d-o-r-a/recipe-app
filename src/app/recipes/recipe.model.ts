@@ -8,7 +8,7 @@ export interface Recipe {
   title: string;
   description: string;
   ingredients: string[];
-  instructions: string;
+  instructions: string[];
   difficulty: DifficultyLevel;
   imageURL: string;
   creatorID: string;

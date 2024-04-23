@@ -3,10 +3,26 @@
     <ion-buttons slot="start">
       <ion-back-button default-href="/recipes/tabs/explore" color="tertiary"></ion-back-button>
     </ion-buttons>
-    <ion-title>recipe-details</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <img alt="Recipe image" src="{{recipe.imageURL}}" />
+
+  <div class="recipe-container">
+    <h2>{{recipe.title}}</h2>
+    <ion-card-subtitle>difficulty: <p>{{recipe.difficulty}}</p></ion-card-subtitle>
+    <p>{{recipe.description}}</p>
+
+    <h4>Ingredients</h4>
+    <ul>
+      <li *ngFor="let ingredient of recipe.ingredients">{{ingredient}}</li>
+    </ul>
+
+    <h4>Instructions</h4>
+    <ol>
+      <li *ngFor="let step of recipe.instructions">{{step}}</li>
+    </ol>
+  </div>
 
 </ion-content>
