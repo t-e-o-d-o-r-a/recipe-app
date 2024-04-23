@@ -5,8 +5,28 @@ import { RecipesPage } from './recipes.page';
 
 const routes: Routes = [
   {
+    path: 'tabs',
+    component: RecipesPage,
+    children: [
+      {
+        path: 'explore',
+        loadChildren: () => import('./explore/explore.module').then( m => m.ExplorePageModule)
+      },
+      {
+        path: 'profile',
+        loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/recipes/tabs/explore',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
     path: '',
-    component: RecipesPage
+    redirectTo: '/recipes/tabs/explore',
+    pathMatch: 'full'
   }
 ];
 
