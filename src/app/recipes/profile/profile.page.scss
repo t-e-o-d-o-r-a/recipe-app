@@ -1,3 +1,39 @@
 ion-title {
   font-family: "Platypi", serif;
+  font-size: 1.5rem;
 }
+
+ion-icon {
+  margin-right: 1rem;
+}
+
+ion-button {
+  --color: var(--ion-color-tertiary);
+  --background: none;
+  --border-color: var(--ion-color-success);
+  --border-style: solid;
+  --border-width: 1px;
+  --box-shadow: 0;
+}
+
+.profile-info {
+  display: flex;
+  justify-content: center;
+}
+
+ion-avatar {
+  margin-top: 2rem;
+}
+
+ion-text {
+  margin-bottom: 2rem;
+}
+
+ion-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+
