@@ -18,4 +18,12 @@ export class ExplorePage implements OnInit {
   ngOnInit() {
   }
 
+  handleChange(event) {
+    if (event.detail.value==='all') {
+      this.recipes = this.recipesService.recipes;
+    }
+    else {
+      this.recipes = this.recipesService.recipes.filter((recipe) => recipe.difficulty===event.detail.value)
+    }
+  }
 }

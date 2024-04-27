@@ -1,0 +1,59 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Create an Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-text>Already have an account? <span [routerLink]="['/', 'log-in']">Log in</span></ion-text>
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Username" label-placement="stacked" placeholder="Enter your username" formControlName="username"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="registerForm.get('username').invalid && registerForm.get('username').touched">
+        <ion-col>
+          <p class="input-error">Username is required.</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="email" label="Email" label-placement="stacked" placeholder="Enter your email" formControlName="email" inputmode="email"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="registerForm.get('email').invalid && registerForm.get('email').touched">
+        <ion-col>
+          <p class="input-error">Email is required.</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="password" label="Password" label-placement="stacked" placeholder="Enter your password" formControlName="password">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="registerForm.get('password').invalid && registerForm.get('password').touched">
+        <ion-col>
+          <p class="input-error">Password needs to be at least 8 characters long.</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" [disabled]="!registerForm.valid" shape="round" expand="block">Register</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

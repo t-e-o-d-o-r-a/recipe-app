@@ -2,3 +2,18 @@ ion-title {
   font-family: "Platypi", serif;
   font-size: 1.5rem;
 }
+
+.filter {
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 40px;
+  margin-right: 12px;
+  font-size: small;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+
