@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-text>Already have an account? <span [routerLink]="['/', 'log-in']">Log in</span></ion-text>
+  <ion-text>Already have an account? <span class="link" [routerLink]="['/', 'log-in']">Log in</span></ion-text>
   <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
     <ion-grid>
       <ion-row>
