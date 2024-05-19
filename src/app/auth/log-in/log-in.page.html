@@ -11,13 +11,13 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-input type="text" label="Username" label-placement="stacked" placeholder="Enter your username" formControlName="username"></ion-input>
+            <ion-input type="email" label="Email" label-placement="stacked" placeholder="Enter your email" formControlName="email" inputmode="email"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="loginForm.get('username').invalid && loginForm.get('username').touched">
+      <ion-row *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched">
         <ion-col>
-          <p class="input-error">Username is required.</p>
+          <p class="input-error">Email is required.</p>
         </ion-col>
       </ion-row>
 
