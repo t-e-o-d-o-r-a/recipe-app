@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, tap } from "rxjs";
+import { Subject, tap } from "rxjs";
 import { environment } from "src/environments/environment";
 import { User } from "./user.model";
 
@@ -26,6 +26,7 @@ export interface UserData {
 export class AuthService {
   private _isUserAuthenticated = false;
   user: User;
+  userLoginComplete = new Subject<void>();
 
   constructor(private http: HttpClient) {}
 
@@ -75,20 +76,22 @@ export class AuthService {
               expirationTime,
               userFromDb?.username
             );
+            this.userLoginComplete.next();
           });
         })
       );
   }
 
   logOut() {
+    this.user = null;
     this._isUserAuthenticated = false;
   }
 
   getToken() {
-    return this.user.token;
+    return this.user?.token;
   }
 
   getUserId() {
-    return this.user.id;
+    return this.user?.id;
   }
 }

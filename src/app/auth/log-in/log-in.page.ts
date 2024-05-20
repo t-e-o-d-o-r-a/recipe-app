@@ -23,6 +23,10 @@ export class LogInPage implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required)
     });
+
+    this.authService.userLoginComplete.subscribe(() => {
+      this.router.navigateByUrl('/recipes/tabs/explore');
+    });
   }
 
   onLogin() {
@@ -31,7 +35,6 @@ export class LogInPage implements OnInit {
       this.authService.logIn(this.loginForm.value).subscribe({
         next: (resData) => {
           console.log('Login Successful.');
-          this.router.navigateByUrl('/recipes/tabs/explore');
         },
         error: async (errRes) => {
           let message = 'Incorrect email or password. Please try again.';
