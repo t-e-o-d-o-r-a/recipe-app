@@ -11,19 +11,6 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-input type="text" label="Username" label-placement="stacked" placeholder="Enter your username" formControlName="username"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row *ngIf="registerForm.get('username').invalid && registerForm.get('username').touched">
-        <ion-col>
-          <p class="input-error">Username is required.</p>
-        </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col>
-          <ion-item>
             <ion-input type="email" label="Email" label-placement="stacked" placeholder="Enter your email" formControlName="email" inputmode="email"></ion-input>
           </ion-item>
         </ion-col>

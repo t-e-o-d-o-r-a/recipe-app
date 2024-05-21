@@ -1,0 +1,33 @@
+.add-recipe-button {
+  --box-shadow: 0;
+  --color: var(--ion-color-light);
+}
+
+ion-title {
+  font-family: "Platypi", serif;
+  font-size: 1.5rem;
+}
+
+.ingredients-title {
+  font-family: "Platypi", serif;
+  font-size: 1.1rem;
+  margin-left: 20px;
+}
+
+.ingredients-listed {
+  margin-top: 1.5rem;
+}
+
+.add-button {
+  --box-shadow:none;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+}
+
+.remove-button {
+  --box-shadow:none;
+}
+
+

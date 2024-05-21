@@ -14,14 +14,13 @@ export class RegisterPage implements OnInit {
   registerForm: FormGroup;
 
   constructor(
-    private authService: AuthService, 
-    private router: Router, 
+    private authService: AuthService,
+    private router: Router,
     private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
     this.registerForm = new FormGroup({
-      username: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)])
     });
@@ -33,7 +32,7 @@ export class RegisterPage implements OnInit {
       this.authService.register(this.registerForm.value).subscribe({
         next: async (resData) => {
           console.log('Registration Successful.');
-          
+
           const alert = await this.alertCtrl.create({
             header: 'Registration Successful',
             message: 'Your account has been successfully registered.',

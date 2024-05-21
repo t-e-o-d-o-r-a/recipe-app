@@ -6,8 +6,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <img alt="Recipe image" src="{{recipe.imageURL}}" />
+<div class="ion-text-center" *ngIf="isLoading">
+  <ion-spinner color="primary"></ion-spinner>
+</div>
+
+<ion-content [fullscreen]="true" *ngIf="!isLoading">
+<!--  <img alt="Recipe image" src="{{recipe.imageURL}}" />-->
 
   <div class="recipe-container">
     <h2>{{recipe.title}}</h2>
@@ -21,7 +25,7 @@
 
     <h4>Instructions</h4>
     <ol>
-      <li *ngFor="let step of recipe.instructions">{{step}}</li>
+      <li *ngFor="let step of recipe.instructions.split('. ')">{{step}}</li>
     </ol>
   </div>
 

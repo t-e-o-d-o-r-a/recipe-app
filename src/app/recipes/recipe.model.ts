@@ -3,13 +3,15 @@ export enum DifficultyLevel {
   Medium = 'medium',
   Chef = 'chef',
 }
-export interface Recipe {
-  id: string;
-  title: string;
-  description: string;
-  ingredients: string[];
-  instructions: string[];
-  difficulty: DifficultyLevel;
-  imageURL: string;
-  creatorID: string;
+export class Recipe {
+  constructor(
+    public id: string,
+    public title: string,
+    public description: string,
+    public ingredients: string[],
+    public instructions: string,
+    public difficulty: DifficultyLevel,
+    public creatorID: string,
+    //public imageURL: string
+  ) {}
 }

@@ -5,7 +5,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-text>Don't have an account? <span class="link" [routerLink]="['/', 'register']">Create an Account</span></ion-text>
+  <ion-item>
+    <ion-text>Don't have an account? <span class="link" [routerLink]="['/', 'register']">Create an Account</span></ion-text>
+  </ion-item>
+
   <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <ion-grid>
       <ion-row>

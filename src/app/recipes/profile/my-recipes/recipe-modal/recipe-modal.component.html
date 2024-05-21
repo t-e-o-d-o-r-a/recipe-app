@@ -1,0 +1,85 @@
+<ion-header [translucent]="true" class="ion-no-border" collapse="fade">
+  <ion-toolbar>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<!--  ovo sa # je lokalna referenca na formu-->
+  <form #f="ngForm" (ngSubmit)="onAddRecipe()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Title" label-placement="stacked" placeholder="Enter the title of your recipe" ngModel name="title" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-textarea label="Description" label-placement="stacked" placeholder="Enter the short description of your recipe" ngModel name="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item class="difficulty">
+            <ion-select aria-label="Select difficulty" interface="popover" placeholder="Difficulty" ngModel name="difficulty" required>
+              <ion-select-option value="beginner">Beginner</ion-select-option>
+              <ion-select-option value="medium">Medium</ion-select-option>
+              <ion-select-option value="chef">Chef</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ingredients-listed">
+        <ion-col>
+          <ion-text class="ingredients-title">Ingredients:</ion-text>
+          <ion-list>
+            <ion-item *ngFor="let ingredient of ingredients; let i = index">
+              <ion-label>{{ingredient}}</ion-label>
+              <ion-fab-button class="remove-button" (click)="removeIngredient(i)" size="small" color="primary">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Ingredients" label-placement="stacked" placeholder="Enter an ingredient" [(ngModel)]="newIngredient" name="newIngredient"></ion-input>
+            <ion-button (click)="addIngredient()" class="add-button" shape="round">Add</ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-textarea label="Instructions" label-placement="stacked" placeholder="Enter the instructions for your recipe" ngModel name="instructions" required></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col>
+          <ion-button [disabled]="f.invalid" class="add-recipe-button" type="submit" expand="block" shape="round" >
+            Post my recipe
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

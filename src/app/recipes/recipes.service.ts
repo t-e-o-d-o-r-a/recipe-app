@@ -1,70 +1,141 @@
 import { Injectable } from '@angular/core';
 import {DifficultyLevel, Recipe} from "./recipe.model";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
+import {BehaviorSubject, map, switchMap, take, tap} from "rxjs";
+import {AuthService} from "../auth/auth.service";
+
+interface RecipeData {
+  title: string;
+  description: string;
+  ingredients?: string[];
+  instructions: string;
+  difficulty: DifficultyLevel;
+  creatorID: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipesService {
-  recipes: Recipe[] = [
-    {
-      id: '1',
-      title: 'Classic Spaghetti Carbonara',
-      description: 'A classic Italian pasta dish with creamy sauce and crispy bacon.',
-      ingredients: ['200g spaghetti', '2 eggs', '100g pancetta or bacon', '50g grated Parmesan cheese', '2 cloves garlic', 'Salt and black pepper'],
-      instructions: [
-        'Cook spaghetti according to package instructions.',
-        'In a separate pan, cook pancetta until crispy.',
-        'In a bowl, whisk together eggs, Parmesan cheese, minced garlic, salt, and pepper.',
-        'Drain spaghetti and immediately add to the pan with pancetta.',
-        'Remove from heat and quickly stir in the egg mixture until creamy.',
-        'Serve hot with extra Parmesan cheese and black pepper.'
-      ],
-      difficulty: DifficultyLevel.Chef,
-      imageURL: 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg',
-      creatorID: 'user123',
-    },
-    {
-      id: '2',
-      title: 'Vegetable Stir-Fry',
-      description: 'A quick and healthy stir-fry recipe loaded with colorful vegetables and tofu.',
-      ingredients: ['1 block tofu', '2 cups mixed vegetables (bell peppers, broccoli, carrots)', '2 cloves garlic', '3 tbsp soy sauce', '1 tbsp sesame oil', '1 tsp cornstarch', 'Cooking oil'],
-      instructions: [
-        'Press tofu to remove excess water, then cut into cubes.',
-        'Heat oil in a pan and fry tofu until golden brown. Set aside.',
-        'In the same pan, stir-fry mixed vegetables and minced garlic until tender-crisp.',
-        'In a small bowl, mix soy sauce, sesame oil, and cornstarch.',
-        'Add tofu back to the pan and pour the sauce over the vegetables.',
-        'Cook until sauce thickens and coats the tofu and vegetables.',
-        'Serve hot with rice or noodles.'
-      ],
-      difficulty: DifficultyLevel.Medium,
-      imageURL: 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg',
-      creatorID: 'user123',
-    },
-    {
-      id: '3',
-      title: 'Chocolate Chip Cookies',
-      description: 'Homemade chocolate chip cookies that are soft, chewy, and irresistible.',
-      ingredients: ['1 cup butter, softened', '3/4 cup brown sugar', '3/4 cup white sugar', '2 eggs', '1 tsp vanilla extract', '2 1/4 cups all-purpose flour', '1 tsp baking soda', '1/2 tsp salt', '2 cups chocolate chips'],
-      instructions: [
-        'Preheat oven to 350°F (175°C) and line baking sheets with parchment paper.',
-        'In a large bowl, cream together softened butter, brown sugar, and white sugar until smooth.',
-        'Beat in eggs one at a time, then stir in vanilla extract.',
-        'Combine flour, baking soda, and salt; gradually stir into the creamed mixture.',
-        'Fold in chocolate chips.',
-        'Drop dough by rounded spoonfuls onto prepared baking sheets.',
-        'Bake for 10 to 12 minutes in the preheated oven, or until edges are golden brown.',
-        'Allow cookies to cool on baking sheet for 5 minutes before transferring to a wire rack to cool completely.'
-      ],
-      difficulty: DifficultyLevel.Beginner,
-      imageURL: 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg',
-      creatorID: 'user123',
-    },
-  ];
 
-  constructor() { }
+  private _recipes = new BehaviorSubject<Recipe[]>([]);
+  private _myRecipes = new BehaviorSubject<Recipe[]>([]);
+
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
+  addRecipe(title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel) {
+    let generatedId: string;
+    let userId: string = this.authService.getUserId();
+
+    return this.http.post<{name: string}>(`${environment.firebaseRDBUrl}/recipes.json?auth=${this.authService.getToken()}`, {
+      title,
+      description,
+      ingredients,
+      instructions,
+      difficulty,
+      creatorID: userId,
+    }).pipe(switchMap((resData) => {
+
+      generatedId = resData.name;
+      return this.myRecipes; //vracamo novi observable
+
+    }),
+      take(1),
+      tap((recipes) => {
+      this._myRecipes.next(recipes.concat({
+        id: generatedId,
+        title,
+        description,
+        ingredients,
+        instructions,
+        creatorID: userId,
+        difficulty,
+      }));
+
+    }));
+  }
+
+  get recipes() {
+    return this._recipes.asObservable();
+  }
+
+  get myRecipes() {
+    return this._myRecipes.asObservable();
+  }
+
+  getRecipes() {
+    return this.http
+      .get<{[key: string]: RecipeData}>(`${environment.firebaseRDBUrl}/recipes.json?auth=${this.authService.getToken()}`)
+      .pipe(map((recipesData) => {
+        const recipes: Recipe[] = [];
+
+        for (const key in recipesData) {
+          if(recipesData.hasOwnProperty(key) && recipesData[key].creatorID !== this.authService.getUserId()) {
+            recipes.push({
+              id: key,
+              title: recipesData[key].title,
+              description: recipesData[key].description,
+              ingredients: recipesData[key].ingredients,
+              instructions: recipesData[key].instructions,
+              creatorID: recipesData[key].creatorID,
+              difficulty: this.matchDifficulty(recipesData[key].difficulty)
+            });
+          }
+        }
+
+        return recipes;
+      }),
+        tap((recipes) => {
+          this._recipes.next(recipes);
+        }));
+  }
+
+  getMyRecipes() {
+    return this.http.get<{[key: string]: RecipeData}>(`${environment.firebaseRDBUrl}/recipes.json?auth=${this.authService.getToken()}&orderBy="creatorID"&equalTo="${this.authService.getUserId()}"`).pipe(
+      map((recipesData) => {
+        const myRecipes: Recipe[] = [];
+
+        for (const key in recipesData) {
+          if(recipesData.hasOwnProperty(key)) {
+            myRecipes.push({
+              id: key,
+              title: recipesData[key].title,
+              description: recipesData[key].description,
+              ingredients: recipesData[key].ingredients,
+              instructions: recipesData[key].instructions,
+              creatorID: recipesData[key].creatorID,
+              difficulty: this.matchDifficulty(recipesData[key].difficulty)
+            });
+          }
+        }
+
+        return myRecipes;
+      }),
+      tap((myRecipes) => {
+        this._myRecipes.next(myRecipes);
+      })
+    );
+  }
 
   getRecipe(id: string) {
-    return this.recipes.find(recipe => recipe.id === id);
+    return this.http.get<RecipeData>(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`)
+      .pipe(map((resData) => {
+        return {
+          id,
+          title: resData.title,
+          description: resData.description,
+          difficulty: this.matchDifficulty(resData.difficulty),
+          instructions: resData.instructions,
+          ingredients: resData.ingredients,
+          creatorID: resData.creatorID,
+        }
+      }));
+  }
+
+  matchDifficulty(difficulty: string) {
+    if (difficulty === 'beginner') return DifficultyLevel.Beginner;
+    else if (difficulty === 'medium') return DifficultyLevel.Medium;
+    else return DifficultyLevel.Chef;
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject, tap } from "rxjs";
+import {Subject, switchMap, tap} from "rxjs";
 import { environment } from "src/environments/environment";
 import { User } from "./user.model";
 
@@ -15,8 +15,7 @@ export interface AuthResponseData {
 }
 
 export interface UserData {
-    username?: string;
-    email: string;    
+    email: string;
     password: string;
 }
 
@@ -43,15 +42,7 @@ export class AuthService {
     return this.http.post<AuthResponseData>(
       `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
       { email: user.email, password: user.password, returnSecureToken: true }
-    ).pipe(
-        tap(response => {
-          const userId = response.localId;
-          this.http.put(
-            `${environment.firebaseRDBUrl}/users/${userId}.json`,
-            { id: userId, username: user.username, email: user.email }
-          ).subscribe();
-        })
-      );
+    )
   }
 
   logIn(user: UserData) {
@@ -65,21 +56,19 @@ export class AuthService {
           const expirationTime = new Date(
             new Date().getTime() + +userData.expiresIn * 1000
           );
-          const userId = userData.localId;
 
-          this.http.get<{ username: string }>(`${environment.firebaseRDBUrl}/users/${userId}.json`)
-          .subscribe(userFromDb => {
-            this.user = new User(
-              userId,
-              userData.email,
-              userData.idToken,
-              expirationTime,
-              userFromDb?.username
-            );
-            this.userLoginComplete.next();
-          });
+          const user = new User(
+            userData.localId,
+            userData.email,
+            userData.idToken,
+            expirationTime,
+          );
+
+          this.user = user;
+          this.userLoginComplete.next();
+
         })
-      );
+      )
   }
 
   logOut() {

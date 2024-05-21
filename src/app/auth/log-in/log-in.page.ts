@@ -35,6 +35,8 @@ export class LogInPage implements OnInit {
       this.authService.logIn(this.loginForm.value).subscribe({
         next: (resData) => {
           console.log('Login Successful.');
+          console.log(this.authService.user)
+          this.router.navigateByUrl('/recipes/tabs/explore');
         },
         error: async (errRes) => {
           let message = 'Incorrect email or password. Please try again.';
