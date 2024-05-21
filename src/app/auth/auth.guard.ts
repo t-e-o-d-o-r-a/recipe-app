@@ -7,7 +7,7 @@ export const authGuard = () => {
   const router = inject(Router);
 
   if (!authService.isUserAuthenticated) {
-    router.navigateByUrl('/log-in');
+    router.navigateByUrl('/splashscreen');
     return false;
   }
 

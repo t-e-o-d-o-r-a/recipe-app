@@ -1,0 +1,27 @@
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="vertical-center">
+          <div class="about" *ngFor="let item of aboutApp; let i = index" [hidden]="selectedIndex !== i">
+            <img src="{{item.aboutImage}}" alt="decorative illustration">
+            <h3>{{item.aboutTitle}}</h3>
+            <p>{{item.aboutText}}</p>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button shape="round" expand="block" (click)="toLogIn()">Log In</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button class="register-button" color="secondary" shape="round" expand="block" (click)="toRegister()">Register</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
