@@ -12,6 +12,7 @@ import { AlertController } from '@ionic/angular';
 export class RegisterPage implements OnInit {
 
   registerForm: FormGroup;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -28,10 +29,12 @@ export class RegisterPage implements OnInit {
 
   onRegister() {
     console.log(this.registerForm);
+    this.isLoading = true;
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: async (resData) => {
           console.log('Registration Successful.');
+          this.isLoading = false;
 
           const alert = await this.alertCtrl.create({
             header: 'Registration Successful',
@@ -58,6 +61,7 @@ export class RegisterPage implements OnInit {
             buttons: ['OK']
           });
           await alert.present();
+          this.isLoading = false;
         }
       });
     }

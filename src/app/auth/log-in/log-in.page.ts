@@ -11,6 +11,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class LogInPage implements OnInit {
   loginForm: FormGroup;
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -31,11 +32,13 @@ export class LogInPage implements OnInit {
 
   onLogin() {
     console.log(this.loginForm);
+    this.isLoading = true;
     if (this.loginForm.valid) {
       this.authService.logIn(this.loginForm.value).subscribe({
         next: (resData) => {
           console.log('Login Successful.');
           console.log(this.authService.user)
+          this.isLoading = false;
           this.router.navigateByUrl('/recipes/tabs/explore');
         },
         error: async (errRes) => {
@@ -47,6 +50,7 @@ export class LogInPage implements OnInit {
             buttons: ['OK'],
           });
           await alert.present();
+          this.isLoading = false;
         },
       });
     }
