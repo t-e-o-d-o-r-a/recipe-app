@@ -10,7 +10,17 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">favourites</ion-title>
+      <ion-title size="large">Favourites</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-list>
+    <ion-item *ngFor="let recipe of favouriteRecipes" (click)="openRecipeDetails(recipe.id)">
+      <ion-label>{{ recipe.title }}</ion-label>
+    </ion-item>
+  </ion-list>
+  
+  <ion-text *ngIf="favouriteRecipes.length === 0" class="ion-text-center">
+    No favourite recipes.
+  </ion-text>
 </ion-content>

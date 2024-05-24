@@ -12,4 +12,13 @@ ion-card-subtitle > p {
   margin: 0;
 }
 
+.recipe-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.favourite-icon {
+  font-size: 1em;
+  cursor: pointer;
+}
