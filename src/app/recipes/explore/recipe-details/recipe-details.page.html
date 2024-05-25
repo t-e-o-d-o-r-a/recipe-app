@@ -1,7 +1,7 @@
 <ion-header [translucent]="true" class="ion-no-border" collapse="fade">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="source === 'favourites' ? '/recipes/tabs/profile/favourites' : '/recipes/tabs/explore'" color="tertiary"></ion-back-button>
+      <ion-back-button [defaultHref]="source === 'favourites' ? '/recipes/tabs/profile/favourites' : (showButtons ? '/recipes/tabs/profile/my-recipes' : '/recipes/tabs/explore')" color="tertiary"></ion-back-button>
     </ion-buttons>
 
     <ion-buttons slot="end" *ngIf="showButtons">

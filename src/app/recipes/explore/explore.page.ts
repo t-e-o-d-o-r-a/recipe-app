@@ -14,9 +14,6 @@ export class ExplorePage implements OnInit, OnDestroy, ViewWillEnter {
 
   recipes: Recipe[];
   allRecipes: Recipe[];
-  beginnerRecipes: Recipe[];
-  mediumRecipes: Recipe[];
-  chefRecipes: Recipe[];
   private recipeSub: Subscription;
 
   constructor(private recipesService: RecipesService, private authService: AuthService) {
