@@ -16,6 +16,10 @@ export class RecipeModalComponent  implements OnInit {
   //referenca na formu
   @ViewChild('f', {static: true}) form: NgForm;
   @Input() title: string;
+  @Input() recipeTitle: string;
+  @Input() description: string;
+  @Input() instructions: string;
+  @Input() difficulty: DifficultyLevel = DifficultyLevel.Beginner;
 
   constructor(private modalCtrl: ModalController) {
     this.newIngredient = '';

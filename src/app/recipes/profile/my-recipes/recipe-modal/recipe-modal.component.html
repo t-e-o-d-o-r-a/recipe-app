@@ -16,7 +16,7 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-input type="text" label="Title" label-placement="stacked" placeholder="Enter the title of your recipe" ngModel name="title" required></ion-input>
+            <ion-input type="text" label="Title" label-placement="stacked" placeholder="Enter the title of your recipe" [ngModel]=recipeTitle name="title" required></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -24,7 +24,7 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-textarea label="Description" label-placement="stacked" placeholder="Enter the short description of your recipe" ngModel name="description"></ion-textarea>
+            <ion-textarea label="Description" label-placement="stacked" placeholder="Enter the short description of your recipe" [ngModel]=description name="description"></ion-textarea>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -32,7 +32,7 @@
       <ion-row>
         <ion-col>
           <ion-item class="difficulty">
-            <ion-select aria-label="Select difficulty" interface="popover" placeholder="Difficulty" ngModel name="difficulty" required>
+            <ion-select [(ngModel)]="difficulty" aria-label="Select difficulty" interface="popover" placeholder="Difficulty" name="difficulty" required>
               <ion-select-option value="beginner">Beginner</ion-select-option>
               <ion-select-option value="medium">Medium</ion-select-option>
               <ion-select-option value="chef">Chef</ion-select-option>
@@ -67,7 +67,7 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-textarea label="Instructions" label-placement="stacked" placeholder="Enter the instructions for your recipe" ngModel name="instructions" required></ion-textarea>
+            <ion-textarea label="Instructions" label-placement="stacked" placeholder="Enter the instructions for your recipe" [ngModel]=instructions name="instructions" required></ion-textarea>
           </ion-item>
         </ion-col>
       </ion-row>

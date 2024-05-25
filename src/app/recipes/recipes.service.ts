@@ -133,6 +133,48 @@ export class RecipesService {
       }));
   }
 
+  deleteRecipe(id: string) {
+    return this.http.delete(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`)
+      .pipe(
+        switchMap(() => {
+          return this.myRecipes;
+        }),
+        take(1),
+        tap((recipes) => {
+          this._myRecipes.next(recipes.filter((r) => r.id !== id));
+        })
+      )
+  }
+
+  editRecipe(id: string, title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, creatorID: string) {
+    return this.http.put(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`, {
+      title,
+      description,
+      ingredients,
+      instructions,
+      creatorID,
+      difficulty,
+    }).pipe(
+      switchMap(() => this.myRecipes),
+      take(1),
+      tap((recipes) => {
+        const updatedRecipeIndex = recipes.findIndex((r) => r.id === id);
+        const updatedRecipes = [...recipes];
+        updatedRecipes[updatedRecipeIndex] = {
+          id,
+          title,
+          description,
+          ingredients,
+          instructions,
+          difficulty,
+          creatorID
+        };
+
+        this._myRecipes.next(updatedRecipes);
+      })
+    );
+  }
+
   matchDifficulty(difficulty: string) {
     if (difficulty === 'beginner') return DifficultyLevel.Beginner;
     else if (difficulty === 'medium') return DifficultyLevel.Medium;

@@ -3,6 +3,15 @@
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="source === 'favourites' ? '/recipes/tabs/profile/favourites' : '/recipes/tabs/explore'" color="tertiary"></ion-back-button>
     </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="showButtons">
+      <ion-fab-button size="small" color="primary" (click)="onEditRecipe()">
+        <ion-icon name="pencil-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button size="small" color="primary" (click)="openAlert()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
