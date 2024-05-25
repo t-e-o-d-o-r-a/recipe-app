@@ -13,6 +13,10 @@ import {AuthService} from "../../auth/auth.service";
 export class ExplorePage implements OnInit, OnDestroy, ViewWillEnter {
 
   recipes: Recipe[];
+  allRecipes: Recipe[];
+  beginnerRecipes: Recipe[];
+  mediumRecipes: Recipe[];
+  chefRecipes: Recipe[];
   private recipeSub: Subscription;
 
   constructor(private recipesService: RecipesService, private authService: AuthService) {
@@ -21,7 +25,8 @@ export class ExplorePage implements OnInit, OnDestroy, ViewWillEnter {
   ngOnInit() {
     this.recipeSub = this.recipesService.recipes.subscribe((recipes) => {
       console.log(recipes);
-      this.recipes = recipes;
+      this.allRecipes = recipes;
+      this.recipes = this.allRecipes;
     });
   }
 
@@ -31,10 +36,10 @@ export class ExplorePage implements OnInit, OnDestroy, ViewWillEnter {
 
   handleChange(event) {
     if (event.detail.value==='all') {
-      //this.recipes = this.recipesService.recipes;
+      this.recipes = this.allRecipes;
     }
     else {
-      //this.recipes = this.recipesService.recipes.filter((recipe) => recipe.difficulty===event.detail.value)
+      this.recipes = this.allRecipes.filter((recipe) => recipe.difficulty===event.detail.value)
     }
   }
 
