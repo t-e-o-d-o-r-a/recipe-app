@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
 import { FavouritesService } from '../profile/favourites/favourites.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-recipe-element',
@@ -11,7 +12,7 @@ export class RecipeElementComponent implements OnInit {
   @Input() recipe!: Recipe;
   favouriteRecipeIds: string[] = [];
 
-  constructor(private favouritesService: FavouritesService) {}
+  constructor(private favouritesService: FavouritesService, private alertController: AlertController) {}
 
   ngOnInit() {
     this.loadFavourites();
@@ -36,12 +37,24 @@ export class RecipeElementComponent implements OnInit {
           (id) => id !== recipeId
         );
         console.log(`Removed from favourites: ${recipeId}`);
+        this.showAlert(`Removed from Favourites`, `"${this.recipe.title}" is removed from Favourite Recipes.`);
       });
     } else {
       this.favouritesService.addToFavourites(recipeId).subscribe(() => {
         this.favouriteRecipeIds.push(recipeId);
         console.log(`Added to favourites: ${recipeId}`);
+        this.showAlert(`Added to Favourites`, `"${this.recipe.title}" is added to Favourite Recipes.`);
       });
     }
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 }
