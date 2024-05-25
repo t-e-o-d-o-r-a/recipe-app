@@ -16,6 +16,8 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
   isLoading: boolean = false;
   private recipeSub: Subscription;
 
+  source: string;
+
   constructor(private route: ActivatedRoute, private recipesService: RecipesService, private navCtrl: NavController, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
@@ -33,6 +35,10 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       );
+    });
+
+    this.route.queryParams.subscribe(params => {
+      this.source = params['source'];
     });
   }
 

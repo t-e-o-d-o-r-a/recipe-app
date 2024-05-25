@@ -39,6 +39,6 @@ export class FavouritesPage implements OnInit {
   }
 
   openRecipeDetails(recipeId: string) {
-    this.router.navigate(['/recipes', 'tabs', 'explore', recipeId]);
+    this.router.navigate(['/recipes/tabs/explore', recipeId], { queryParams: { source: 'favourites' } });
   }
 }
