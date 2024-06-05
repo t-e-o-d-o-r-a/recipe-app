@@ -12,6 +12,8 @@ export class MyRecipeElementComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if(!this.recipe.imageURL) this.recipe.imageURL = "https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg";
+  }
 
 }

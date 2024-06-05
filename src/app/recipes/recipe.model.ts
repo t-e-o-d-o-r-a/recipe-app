@@ -12,6 +12,6 @@ export class Recipe {
     public instructions: string,
     public difficulty: DifficultyLevel,
     public creatorID: string,
-    //public imageURL: string
+    public imageURL: string = "https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg",
   ) {}
 }

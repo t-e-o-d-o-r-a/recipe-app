@@ -36,6 +36,7 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
       this.recipeSub = this.recipesService.getRecipe(paramMap.get('recipeId')).subscribe(
         (recipe) => {
           this.recipe = recipe;
+          if (!this.recipe.imageURL) this.recipe.imageURL = "https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg";
           this.isLoading = false;
           if (this.userId === recipe.creatorID) {
             this.showButtons = true;
@@ -74,7 +75,8 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
         description: this.recipe.description,
         ingredients: this.recipe.ingredients,
         instructions: this.recipe.instructions,
-        difficulty: this.recipe.difficulty
+        difficulty: this.recipe.difficulty,
+        imageURL: this.recipe.imageURL,
       }
     });
 
@@ -85,13 +87,14 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
     if (role === 'confirm') {
       const diff = this.matchDifficulty(data.recipeData.difficulty)
 
-      this.recipesService.editRecipe(this.recipe.id, data.recipeData.title, data.recipeData.description, data.recipeData.ingredients, data.recipeData.instructions, diff, this.auth.getUserId())
+      this.recipesService.editRecipe(this.recipe.id, data.recipeData.title, data.recipeData.description, data.recipeData.ingredients, data.recipeData.instructions, diff, this.auth.getUserId(), data.recipeData.imageURL)
         .subscribe((res) => {
           this.recipe.title = data.recipeData.title;
           this.recipe.description = data.recipeData.description;
           this.recipe.instructions = data.recipeData.instructions;
           this.recipe.ingredients = data.recipeData.ingredients;
           this.recipe.difficulty = data.recipeData.difficulty;
+          this.recipe.imageURL = data.recipeData.imageURL;
         })
     }
   }

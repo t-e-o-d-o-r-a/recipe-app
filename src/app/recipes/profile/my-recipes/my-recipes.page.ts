@@ -39,8 +39,8 @@ export class MyRecipesPage implements OnInit, ViewWillEnter, OnDestroy {
       if(resultData.role === 'confirm') {
         console.log(resultData);
 
-        let {title, description, ingredients, instructions, difficulty} = resultData.data.recipeData;
-        this.recipeService.addRecipe(title, description, ingredients, instructions, difficulty).subscribe((res) => {
+        let {title, description, ingredients, instructions, difficulty, imageURL} = resultData.data.recipeData;
+        this.recipeService.addRecipe(title, description, ingredients, instructions, difficulty, imageURL).subscribe((res) => {
           console.log(res)
 
         });

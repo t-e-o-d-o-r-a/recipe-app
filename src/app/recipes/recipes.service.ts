@@ -12,6 +12,7 @@ interface RecipeData {
   instructions: string;
   difficulty: DifficultyLevel;
   creatorID: string;
+  imageURL: string;
 }
 
 @Injectable({
@@ -24,7 +25,7 @@ export class RecipesService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  addRecipe(title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel) {
+  addRecipe(title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, imageURL: string) {
     let generatedId: string;
     let userId: string = this.authService.getUserId();
 
@@ -35,6 +36,7 @@ export class RecipesService {
       instructions,
       difficulty,
       creatorID: userId,
+      imageURL
     }).pipe(switchMap((resData) => {
 
       generatedId = resData.name;
@@ -51,6 +53,7 @@ export class RecipesService {
         instructions,
         creatorID: userId,
         difficulty,
+        imageURL
       }));
 
     }));
@@ -79,7 +82,8 @@ export class RecipesService {
               ingredients: recipesData[key].ingredients,
               instructions: recipesData[key].instructions,
               creatorID: recipesData[key].creatorID,
-              difficulty: this.matchDifficulty(recipesData[key].difficulty)
+              difficulty: this.matchDifficulty(recipesData[key].difficulty),
+              imageURL: recipesData[key].imageURL,
             });
           }
         }
@@ -105,7 +109,8 @@ export class RecipesService {
               ingredients: recipesData[key].ingredients,
               instructions: recipesData[key].instructions,
               creatorID: recipesData[key].creatorID,
-              difficulty: this.matchDifficulty(recipesData[key].difficulty)
+              difficulty: this.matchDifficulty(recipesData[key].difficulty),
+              imageURL: recipesData[key].imageURL
             });
           }
         }
@@ -129,6 +134,7 @@ export class RecipesService {
           instructions: resData.instructions,
           ingredients: resData.ingredients,
           creatorID: resData.creatorID,
+          imageURL: resData.imageURL,
         }
       }));
   }
@@ -146,7 +152,7 @@ export class RecipesService {
       )
   }
 
-  editRecipe(id: string, title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, creatorID: string) {
+  editRecipe(id: string, title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, creatorID: string, imageURL: string) {
     return this.http.put(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`, {
       title,
       description,
@@ -154,6 +160,7 @@ export class RecipesService {
       instructions,
       creatorID,
       difficulty,
+      imageURL,
     }).pipe(
       switchMap(() => this.myRecipes),
       take(1),
@@ -167,7 +174,8 @@ export class RecipesService {
           ingredients,
           instructions,
           difficulty,
-          creatorID
+          creatorID,
+          imageURL,
         };
 
         this._myRecipes.next(updatedRecipes);

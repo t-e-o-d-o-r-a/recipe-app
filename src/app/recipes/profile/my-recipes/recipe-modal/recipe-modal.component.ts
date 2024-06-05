@@ -19,6 +19,7 @@ export class RecipeModalComponent  implements OnInit {
   @Input() recipeTitle: string;
   @Input() description: string;
   @Input() instructions: string;
+  @Input() imageURL: string;
   @Input() difficulty: DifficultyLevel = DifficultyLevel.Beginner;
 
   constructor(private modalCtrl: ModalController) {
@@ -42,6 +43,7 @@ export class RecipeModalComponent  implements OnInit {
         instructions: this.form.value['instructions'],
         difficulty: this.matchDifficulty(this.form.value['difficulty']),
         ingredients: this.ingredients,
+        imageURL: this.form.value['imageURL'],
       }}, 'confirm');
   }
 
