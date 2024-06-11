@@ -1,7 +1,7 @@
 export enum DifficultyLevel {
-  Beginner = 'beginner',
-  Medium = 'medium',
-  Chef = 'chef',
+  Beginner = 'Beginner',
+  Medium = 'Medium',
+  Chef = 'Chef',
 }
 export class Recipe {
   constructor(

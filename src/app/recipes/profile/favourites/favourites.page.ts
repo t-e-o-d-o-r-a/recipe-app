@@ -3,7 +3,7 @@ import { Recipe } from '../../recipe.model';
 import { FavouritesService } from './favourites.service';
 import { RecipesService } from '../../recipes.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-favourites',
@@ -18,7 +18,8 @@ export class FavouritesPage implements OnInit {
     private favouritesService: FavouritesService,
     private recipesService: RecipesService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
@@ -41,7 +42,7 @@ export class FavouritesPage implements OnInit {
   }
 
   openRecipeDetails(recipeId: string) {
-    this.router.navigate(['/recipes/tabs/explore', recipeId], { queryParams: { source: 'favourites' } });
+    this.router.navigate(['/recipes/tabs/profile/favourites', recipeId], { queryParams: { source: 'favourites' } });
   }
 
   async removeFromFavourites(recipeId: string) {

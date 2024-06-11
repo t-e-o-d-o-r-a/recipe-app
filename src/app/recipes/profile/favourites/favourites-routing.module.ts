@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: FavouritesPage
+  },
+  {
+    path: ':recipeId',
+    loadChildren: () => import('../../explore/recipe-details/recipe-details.module').then( m => m.RecipeDetailsPageModule)
   }
 ];
 

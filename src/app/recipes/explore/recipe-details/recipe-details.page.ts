@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {RecipesService} from "../../recipes.service";
 import {DifficultyLevel, Recipe} from "../../recipe.model";
 import {AlertController, LoadingController, ModalController, NavController} from "@ionic/angular";
@@ -22,7 +22,16 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
 
   source: string;
 
-  constructor(private route: ActivatedRoute, private recipesService: RecipesService, private navCtrl: NavController, private loadingCtrl: LoadingController, private modalCtrl: ModalController, private auth: AuthService, private alertCtrl: AlertController) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private recipesService: RecipesService, 
+    private navCtrl: NavController, 
+    private loadingCtrl: LoadingController, 
+    private modalCtrl: ModalController, 
+    private auth: AuthService, 
+    private alertCtrl: AlertController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -43,10 +52,6 @@ export class RecipeDetailsPage implements OnInit, OnDestroy {
           }
         }
       );
-    });
-
-    this.route.queryParams.subscribe(params => {
-      this.source = params['source'];
     });
   }
 
