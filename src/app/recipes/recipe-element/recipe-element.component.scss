@@ -1,5 +1,10 @@
 ion-card {
   border-radius: 25px;
+  width: 100%;
+}
+
+ion-card > img {
+  width: 100%;
 }
 
 ion-card-subtitle > p {

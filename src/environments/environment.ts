@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  firebaseAPIKey: '',
-  firebaseRDBUrl: '',
+  firebaseAPIKey: 'AIzaSyDcf9fImA-h3BM7pIv9oAUZoIsIQOFGzEM',
+  firebaseRDBUrl: 'https://recipe-app-f3480-default-rtdb.europe-west1.firebasedatabase.app',
 };
 
 /*

@@ -184,8 +184,8 @@ export class RecipesService {
   }
 
   matchDifficulty(difficulty: string) {
-    if (difficulty === 'beginner') return DifficultyLevel.Beginner;
-    else if (difficulty === 'medium') return DifficultyLevel.Medium;
+    if (difficulty.toLowerCase() === 'beginner') return DifficultyLevel.Beginner;
+    else if (difficulty.toLowerCase() === 'medium') return DifficultyLevel.Medium;
     else return DifficultyLevel.Chef;
   }
 }
