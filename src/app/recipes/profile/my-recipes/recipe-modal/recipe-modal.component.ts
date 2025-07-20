@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ModalController} from "@ionic/angular";
 import {NgForm} from "@angular/forms";
 import {DifficultyLevel} from "../../../recipe.model";
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-recipe-modal',
@@ -12,6 +13,7 @@ export class RecipeModalComponent  implements OnInit {
 
   newIngredient: string;
   ingredients: string[] = [];
+  imageDataUrl: string = '';
 
   //referenca na formu
   @ViewChild('f', {static: true}) form: NgForm;
@@ -19,8 +21,8 @@ export class RecipeModalComponent  implements OnInit {
   @Input() recipeTitle: string;
   @Input() description: string;
   @Input() instructions: string;
-  @Input() imageURL: string;
-  @Input() difficulty: DifficultyLevel = DifficultyLevel.Beginner;
+  @Input() difficulty: DifficultyLevel;
+  @Input() imageURL:  string;
 
   constructor(private modalCtrl: ModalController) {
     this.newIngredient = '';
@@ -43,7 +45,7 @@ export class RecipeModalComponent  implements OnInit {
         instructions: this.form.value['instructions'],
         difficulty: this.matchDifficulty(this.form.value['difficulty']),
         ingredients: this.ingredients,
-        imageURL: this.form.value['imageURL'],
+        imageURL: this.imageDataUrl ? this.imageDataUrl : this.imageURL,
       }}, 'confirm');
   }
 
@@ -59,9 +61,23 @@ export class RecipeModalComponent  implements OnInit {
   }
 
   matchDifficulty(difficulty) {
-    if (difficulty === 'beginner') return DifficultyLevel.Beginner;
-    else if (difficulty === 'medium') return DifficultyLevel.Medium;
+    if (difficulty.toLowerCase() === 'beginner') return DifficultyLevel.Beginner;
+    else if (difficulty.toLowerCase() === 'medium') return DifficultyLevel.Medium;
     else return DifficultyLevel.Chef;
   }
+
+  async selectImage() {
+    //console.log('biraj sliku');
+    const image = await Camera.getPhoto({
+      quality: 80,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Prompt, // Camera ili Gallery
+    });
+
+    this.imageDataUrl = image.dataUrl!;
+
+    //console.log('slika' + this.imageDataUrl);
+  }
+
 
 }

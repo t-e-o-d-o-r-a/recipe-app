@@ -8,10 +8,20 @@ ion-title {
   font-size: 1.5rem;
 }
 
+ion-toolbar {
+  padding-top: 3rem !important; 
+}
+
 .ingredients-title {
   font-family: "Platypi", serif;
   font-size: 1.1rem;
   margin-left: 20px;
+}
+
+.image-title {
+  font-family: "Platypi", serif;
+  font-size: 1.1rem;
+  margin-right: auto;
 }
 
 .ingredients-listed {
@@ -30,4 +40,9 @@ ion-title {
   --box-shadow:none;
 }
 
+.recipe-image {
+  max-height: 12rem; 
+  object-fit: cover;
+  padding: 2rem 0;
+}
 

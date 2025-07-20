@@ -33,9 +33,9 @@
         <ion-col>
           <ion-item class="difficulty">
             <ion-select [(ngModel)]="difficulty" aria-label="Select difficulty" interface="popover" placeholder="Difficulty" name="difficulty" required>
-              <ion-select-option value="beginner">Beginner</ion-select-option>
-              <ion-select-option value="medium">Medium</ion-select-option>
-              <ion-select-option value="chef">Chef</ion-select-option>
+              <ion-select-option value="Beginner">Beginner</ion-select-option>
+              <ion-select-option value="Medium">Medium</ion-select-option>
+              <ion-select-option value="Chef">Chef</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
@@ -75,7 +75,14 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-textarea label="Recipe Image" label-placement="stacked" placeholder="Enter the URL to the image of ypur recipe" [ngModel]=imageURL name="imageURL"></ion-textarea>
+            <ion-text class="image-title">Recipe Image:</ion-text>
+            <ion-fab-button (click)="selectImage()" class="add-button" size="small" color="primary">
+                  <ion-icon name="camera-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-item>
+
+          <ion-item *ngIf="imageDataUrl || imageURL">
+            <img [src]="imageURL || imageDataUrl" class="recipe-image" />
           </ion-item>
         </ion-col>
       </ion-row>

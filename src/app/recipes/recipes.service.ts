@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {DifficultyLevel, Recipe} from "./recipe.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {BehaviorSubject, map, switchMap, take, tap} from "rxjs";
+import {BehaviorSubject, map, Observable, switchMap, take, tap, of} from "rxjs";
 import {AuthService} from "../auth/auth.service";
 
 interface RecipeData {
@@ -25,38 +25,54 @@ export class RecipesService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  addRecipe(title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, imageURL: string) {
+  addRecipe(title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, imageURL: string | null) {
     let generatedId: string;
     let userId: string = this.authService.getUserId();
 
-    return this.http.post<{name: string}>(`${environment.firebaseRDBUrl}/recipes.json?auth=${this.authService.getToken()}`, {
-      title,
-      description,
-      ingredients,
-      instructions,
-      difficulty,
-      creatorID: userId,
-      imageURL
-    }).pipe(switchMap((resData) => {
+    let upload: Observable<string>;
 
-      generatedId = resData.name;
-      return this.myRecipes; //vracamo novi observable
+    if (imageURL) {
+      upload = this.uploadImageToImgbb(imageURL);
+    } else {
+      upload = of(''); // ako nema slike vratice prazan string
+    }
 
+    return upload.pipe(
+    switchMap((imageURL) => {
+      return this.http.post<{ name: string }>(
+        `${environment.firebaseRDBUrl}/recipes.json?auth=${this.authService.getToken()}`,
+        {
+          title,
+          description,
+          ingredients,
+          instructions,
+          difficulty,
+          creatorID: userId,
+          imageURL: imageURL || 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg',
+        }
+      );
     }),
-      take(1),
-      tap((recipes) => {
-      this._myRecipes.next(recipes.concat({
-        id: generatedId,
-        title,
-        description,
-        ingredients,
-        instructions,
-        creatorID: userId,
-        difficulty,
-        imageURL
-      }));
-
-    }));
+    switchMap((resData) => {
+      generatedId = resData.name;
+      return this.myRecipes;
+    }),
+    take(1),
+    tap((recipes) => {
+      this._myRecipes.next(
+        recipes.concat({
+          id: generatedId,
+          title,
+          description,
+          ingredients,
+          instructions,
+          creatorID: userId,
+          difficulty,
+          imageURL: imageURL || 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg',
+        })
+      );
+    })
+  );
+    
   }
 
   get recipes() {
@@ -152,16 +168,35 @@ export class RecipesService {
       )
   }
 
-  editRecipe(id: string, title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, creatorID: string, imageURL: string) {
-    return this.http.put(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`, {
-      title,
-      description,
-      ingredients,
-      instructions,
-      creatorID,
-      difficulty,
-      imageURL,
-    }).pipe(
+  editRecipe(id: string, title: string, description: string, ingredients: string[], instructions: string, difficulty: DifficultyLevel, creatorID: string, imageURL: string | null) {
+    let upload: Observable<string>;
+
+    const existingRecipe = this._recipes.getValue().find(r => r.id === id);
+    const originalImageURL = existingRecipe?.imageURL;
+
+    const shouldUpload = imageURL && imageURL !== originalImageURL;
+
+    if (shouldUpload) {
+      upload = this.uploadImageToImgbb(imageURL);
+    } else {
+      upload = of(imageURL || 'https://design4users.com/wp-content/uploads/2023/03/food-illustration-by-helen-lee.jpg');
+    }
+
+    let image;
+    return upload.pipe(
+      switchMap((finalImageURL) => {
+        image = finalImageURL;
+        return this.http.put(`${environment.firebaseRDBUrl}/recipes/${id}.json?auth=${this.authService.getToken()}`, {
+          title,
+          description,
+          ingredients,
+          instructions,
+          creatorID,
+          difficulty,
+          imageURL: finalImageURL,
+        } 
+      ); 
+    }),
       switchMap(() => this.myRecipes),
       take(1),
       tap((recipes) => {
@@ -175,7 +210,7 @@ export class RecipesService {
           instructions,
           difficulty,
           creatorID,
-          imageURL,
+          imageURL: image,
         };
 
         this._myRecipes.next(updatedRecipes);
@@ -188,4 +223,17 @@ export class RecipesService {
     else if (difficulty.toLowerCase() === 'medium') return DifficultyLevel.Medium;
     else return DifficultyLevel.Chef;
   }
+
+  uploadImageToImgbb(base64Image: string): Observable<string> {
+    const apiKey = '';
+    const formData = new FormData();
+
+    const base64 = base64Image.replace(/^data:image\/\w+;base64,/, '');
+    formData.append('image', base64);
+
+    return this.http
+      .post<any>(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData)
+      .pipe(map((res) => res.data.url));
+  }
+
 }

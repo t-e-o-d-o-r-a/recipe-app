@@ -3,6 +3,10 @@ ion-title {
   font-size: 1.5rem;
 }
 
+ion-toolbar {
+  padding-top: 3rem !important; 
+}
+
 .filter {
   border: 1px solid var(--ion-color-primary);
   border-radius: 40px;
